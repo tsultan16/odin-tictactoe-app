@@ -8,6 +8,8 @@ function createPlayer(name, type) {
 
 function startGame() {
 
+    let current_turn = 0;
+
     // get player names (hard-coded for now)
     const name1 = "Alice"; 
     const name2 = "Bob"; 
@@ -28,20 +30,88 @@ function startGame() {
         } 
 
         const display = () => {
-            console.log(`${grid[0]} | ${grid[1]} | ${grid[2]}\n${grid[3]} | ${grid[4]} | ${grid[5]}\n${grid[6]} | ${grid[7]} | ${grid[8]}`);
+            console.log(`\n${grid[0]} | ${grid[1]} | ${grid[2]}\n${grid[3]} | ${grid[4]} | ${grid[5]}\n${grid[6]} | ${grid[7]} | ${grid[8]}\n`);
         };
 
         const play = (player, position) => {
-            grid[position] = player.getType();
+            if (grid[position] === "-"){
+                grid[position] = player.getType();
+            } else {
+                console.log("Invalid move. Board position already filled!");
+            }
+        };
+
+        const checkGameWin = () => {
+            // check for win patterns (same symbol along any column/row/diagonal)
+
+            // check rows
+            let foundPattern = false;
+
+            if (grid[0] === grid[1] && grid[0] === grid[2] && !(grid[0]+grid[1]+grid[2]).includes("-")) {
+                return true;
+            }    
+            if (grid[3] === grid[4] && grid[3] === grid[5] && !(grid[3]+grid[4]+grid[5]).includes("-")) {
+                return true;
+            }    
+            if (grid[6] === grid[7] && grid[6] === grid[8] && !(grid[6]+grid[7]+grid[8]).includes("-")) {
+                return true;
+            }  
+
+            // check columns
+            if (grid[0] === grid[3] && grid[0] === grid[6] && !(grid[0]+grid[3]+grid[6]).includes("-")) {
+                return true;
+            } 
+            if (grid[1] === grid[4] && grid[1] === grid[7] && !(grid[1]+grid[4]+grid[7]).includes("-")) {
+                return true;
+            } 
+            if (grid[2] === grid[5] && grid[2] === grid[8] && !(grid[2]+grid[5]+grid[8]).includes("-")) {
+                return true;
+            } 
+         
+            // check diagonals
+            if (grid[0] === grid[4] && grid[0] === grid[8] && !(grid[0]+grid[4]+grid[8]).includes("-")) {
+                return true;
+            } 
+            if (grid[2] === grid[4] && grid[2] === grid[6] && !(grid[2]+grid[4]+grid[6]).includes("-")) {
+                return true;
+            } 
+
+            return false;
+
         };
 
 
-        return {display, play}
+        return {display, play, checkGameWin}
 
     }) (); 
     console.log("game board: ", gameBoard);
     gameBoard.display();
 
+    const playRound = () => {
+        current_player = (current_turn%2 == 0) ? player1 : player2;
+        const position = window.prompt(`${current_player.getName()} choose your move position.`);
+        gameBoard.play(current_player, position);
+        current_turn++;
+
+        gameBoard.display();
+        return current_player;
+    };
+
+    let gameOver = false;
+    while(! gameOver){
+        const p = playRound();
+        const won = gameBoard.checkGameWin();
+        if (won) {
+            gameOver = true;
+            console.log(`${p.getName()} has won the game!`);
+        };
+
+        // check if all slots filled
+        if (current_turn === 9) {
+            gameOver = true;
+            console.log(`And it's a draw!`);
+        }
+    }
 
 }
 

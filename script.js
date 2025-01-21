@@ -36,13 +36,15 @@ function startGame() {
         const play = (player, position) => {
             if (grid[position] === "-"){
                 grid[position] = player.getType();
+                return true;
             } else {
                 console.log("Invalid move. Board position already filled!");
+                return false;
             }
         };
 
         const checkGameWin = () => {
-            // check for win patterns (same symbol along any column/row/diagonal)
+            // check for win pattern (same symbol along any column/row/diagonal)
 
             // check rows
             let foundPattern = false;
@@ -89,8 +91,12 @@ function startGame() {
 
     const playRound = () => {
         current_player = (current_turn%2 == 0) ? player1 : player2;
-        const position = window.prompt(`${current_player.getName()} choose your move position.`);
-        gameBoard.play(current_player, position);
+        let done = false;
+        // loop until user gives valid input position
+        do {
+            const position = window.prompt(`${current_player.getName()} choose your move position.`);
+            done = gameBoard.play(current_player, position);
+        } while(!done);
         current_turn++;
 
         gameBoard.display();
@@ -98,7 +104,7 @@ function startGame() {
     };
 
     let gameOver = false;
-    while(! gameOver){
+    while(!gameOver){
         const p = playRound();
         const won = gameBoard.checkGameWin();
         if (won) {
@@ -115,4 +121,6 @@ function startGame() {
 
 }
 
-startGame();
+
+console.log("Begin game.")
+//startGame();

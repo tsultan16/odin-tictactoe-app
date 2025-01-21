@@ -3,3 +3,55 @@
     margin: 0;
     box-sizing: border-box;
 }
+
+body {
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.container {
+    height: 25em;
+    width: 25em; 
+    
+    border: 1px solid blue;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+}
+
+.grid-cell {
+    border: 3px solid black;
+}
+
+.grid-cell:hover {
+    box-shadow: 0 0 1em 0.5em rgba(0, 244, 69, 0.756);  
+}
+
+.grid-cell.cross {
+    background-image: url("./images/cross.svg");
+    background-size: cover; /* scales and crops image to fit the container */
+}
+
+.grid-cell.cross:hover {
+    box-shadow: 0 0 1em 0.5em rgba(255, 2, 2, 0.756);  
+}
+
+.grid-cell.circle {
+    background-image: url("./images/circle.svg");
+    background-size: cover; /* scales and crops image to fit the container */
+}
+
+.grid-cell.circle:hover {
+    box-shadow: 0 0 1em 0.5em rgba(255, 2, 2, 0.756);  
+}
+
+
+
+
+

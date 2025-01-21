@@ -122,5 +122,13 @@ function startGame() {
 }
 
 
+const container = document.querySelector(".container");
+// attach event listener to board grid to register clicks
+container.addEventListener("click", (e) => {
+    target = e.target;
+    console.log(`Clicked on cell# ${target.id}`);
+});
+
+
 console.log("Begin game.")
 //startGame();

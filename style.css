@@ -11,8 +11,27 @@ body {
 
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
     align-items: center;
+}
+
+h1 {
+    margin: 2em;
+}
+
+.outer-container {
+    display: flex;
+    align-items: center;
+    gap: 2em;
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1em;
+
+    visibility: hidden;
 }
 
 .container {
@@ -69,6 +88,8 @@ body {
     font-weight: bold;
     padding: 0.5em 2em;
     border-radius: 0.3em;
+
+    margin-top: 1em;
 }
 
 .restart-btn:hover {
@@ -76,6 +97,69 @@ body {
     background-color: rgba(154, 2, 2, 1.0);
     box-shadow: 0 0 0.6em 0.2em rgba(154, 2, 2, 0.641);
 }
+
+.start-form h3 {
+    text-align: center;
+}
+
+.start-form .input-field {
+    /* display: flex; */
+    margin: 1em 1em;
+}
+
+.start-form label {
+    display: inline-block;
+    min-width: 5em;
+    text-align: right;
+    margin-right: 1em;
+} 
+
+.form-buttons {
+    margin-top: 2em;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+}
+
+#invalid-msg {
+    margin-top: 1em;
+    text-align: center;
+}
+
+input {
+    font-size: 1em;
+    height: 1.8em;
+    width: 14em;
+    border-radius: 0.2em;
+    border: 1px solid rgb(189, 188, 188);
+    padding: 0.2em 0.4em;
+}
+
+input:focus {
+    outline-color: #084821ae;
+    outline-style: solid;
+    outline-width: 2px;
+    box-shadow: 3px 3px 5px 1px rgba(98, 98, 145, 0.776);
+}
+
+.btn1 {
+    border: 0;
+    background-color: rgb(16, 80, 58);
+    color: white;
+    font-weight: bold;
+    padding: 0.5em 2em;  
+    border-radius: 0.5em;      
+}
+
+.btn1:hover {
+    cursor: pointer;
+    background-color: rgba(26, 117, 85, 0.897);
+    /* border: 1px solid whitesmoke; */
+    box-shadow: 2px 3px 5px 1px rgba(214, 231, 255, 0.55);  
+}
+
 
 
 

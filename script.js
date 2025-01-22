@@ -7,11 +7,11 @@ function createPlayer(name, type) {
 }
 
 
-function startGame(gameBoard) {
+function startGame(gameBoard, name1, name2) {
 
     // get player names (hard-coded for now)
-    const name1 = "Alice"; 
-    const name2 = "Bob"; 
+    // const name1 = "Alice"; 
+    // const name2 = "Bob"; 
 
     // create two players
     const player1 = createPlayer(name1, "O");
@@ -76,7 +76,7 @@ function startGame(gameBoard) {
             current_turn++;
             
             // check if all slots filled
-            if (current_turn === 9) {
+            if (current_turn === 9 && won === false) {
                 gameOver = true;
                 console.log(`And it's a draw!`);
                 player_turn.textContent = `Game over. It's a draw!`;
@@ -104,93 +104,131 @@ function startGame(gameBoard) {
 const container = document.querySelector(".container");
 const player_turn = document.querySelector(".player-turn");
 const restart = document.querySelector(".restart-btn");
+const form_confirm_btn = document.querySelector("#confirm-btn"); 
+const form_input_player1 = document.querySelector("#player1");
+const form_input_player2 = document.querySelector("#player2");
+const form_invalid_msg = document.querySelector("#invalid-msg");
+const form = document.querySelector(".start-form");
+const game_container = document.querySelector(".game-container");
 
 
-// create game-board
-const gameBoard = (function () {
-    // create empty game grid, will make it private
-    let grid = [];
-    for (let i = 0; i < 9; i++){
-        grid.push("-");
-    } 
+// add event listener for game start form confirm
+form_confirm_btn.addEventListener("click", (event) => {
+    event.preventDefault(); // We don't want to submit this fake form
+    
+    // get user names from form input
+    const name1 = form_input_player1.value;
+    const name2 = form_input_player2.value;   
+    console.log("Form input: ", name1, name2);
+ 
+    if (name1 === "" || name2 === "") {
+        // show invalid input message
+        form_invalid_msg.textContent = "Invalid input. All fields required!";
+        form_invalid_msg.style.color = "red";
+    } else {
 
-    const display = () => {
-        console.log(`\n${grid[0]} | ${grid[1]} | ${grid[2]}\n${grid[3]} | ${grid[4]} | ${grid[5]}\n${grid[6]} | ${grid[7]} | ${grid[8]}\n`);
-    };
+        // form_invalid_msg.textContent = "";
+        // form_input_player1.value = "";
+        // form_input_player2.value = ""; 
 
-    const play = (player, position) => {
-        if (grid[position] === "-"){
-            grid[position] = player.getType();
-            return true;
-        } else {
-            console.log("Invalid move. Board position already filled!");
-            return false;function eraseGrid() {
-            }
-        }
-    };
+        // remove the form
+        form.remove();
 
-    const checkGameWin = () => {
-        // check for win pattern (same symbol along any column/row/diagonal)
+        // display the game container, then start the game
+        game_container.style.visibility = 'visible';
+        startMain(name1, name2);
+    }
 
-        // check rows
-
-        if (grid[0] === grid[1] && grid[0] === grid[2] && !(grid[0]+grid[1]+grid[2]).includes("-")) {
-            return [0,1,2];
-        }    
-        if (grid[3] === grid[4] && grid[3] === grid[5] && !(grid[3]+grid[4]+grid[5]).includes("-")) {
-            return [3,4,5];
-        }    
-        if (grid[6] === grid[7] && grid[6] === grid[8] && !(grid[6]+grid[7]+grid[8]).includes("-")) {
-            return [6,7,8];
-        }  
-
-        // check columns
-        if (grid[0] === grid[3] && grid[0] === grid[6] && !(grid[0]+grid[3]+grid[6]).includes("-")) {
-            return [0,3,6];
-        } 
-        if (grid[1] === grid[4] && grid[1] === grid[7] && !(grid[1]+grid[4]+grid[7]).includes("-")) {
-            return [1,4,7];
-        } 
-        if (grid[2] === grid[5] && grid[2] === grid[8] && !(grid[2]+grid[5]+grid[8]).includes("-")) {
-            return [2,5,8];
-        } 
-        
-        // check diagonals
-        if (grid[0] === grid[4] && grid[0] === grid[8] && !(grid[0]+grid[4]+grid[8]).includes("-")) {
-            return [0,4,8];
-        } 
-        if (grid[2] === grid[4] && grid[2] === grid[6] && !(grid[2]+grid[4]+grid[6]).includes("-")) {
-            return [2,4,6];
-        } 
-
-        return false;
-    };
-
-    const eraseGrid = () => {
-        // reset grid array and remove html class for the cross/circle images
-        for (let i = 0; i < 9; i++){
-            grid[i] = "-";
-            const cell = document.querySelector(`[id='${i}']`);
-            cell.classList.remove("cross", "circle", "win");
-        } 
-        console.log("Grid erased!");
-        display();
-    };
-
-    return {display, play, checkGameWin, eraseGrid}
-
-}) (); 
-
-
-
-// add event listener for triggering game restart
-restart.addEventListener("click", (e) => {
-    // erase the board and restart game
-    gameBoard.eraseGrid();
-    startGame(gameBoard);
-    console.log("Game restarted!");
 });
 
 
-console.log("Begin game.")
-startGame(gameBoard);
+function startMain(name1, name2) {
+    // create game-board
+    const gameBoard = (function () {
+        // create empty game grid, will make it private
+        let grid = [];
+        for (let i = 0; i < 9; i++){
+            grid.push("-");
+        } 
+    
+        const display = () => {
+            console.log(`\n${grid[0]} | ${grid[1]} | ${grid[2]}\n${grid[3]} | ${grid[4]} | ${grid[5]}\n${grid[6]} | ${grid[7]} | ${grid[8]}\n`);
+        };
+    
+        const play = (player, position) => {
+            if (grid[position] === "-"){
+                grid[position] = player.getType();
+                return true;
+            } else {
+                console.log("Invalid move. Board position already filled!");
+                return false;function eraseGrid() {
+                }
+            }
+        };
+    
+        const checkGameWin = () => {
+            // check for win pattern (same symbol along any column/row/diagonal)
+    
+            // check rows
+    
+            if (grid[0] === grid[1] && grid[0] === grid[2] && !(grid[0]+grid[1]+grid[2]).includes("-")) {
+                return [0,1,2];
+            }    
+            if (grid[3] === grid[4] && grid[3] === grid[5] && !(grid[3]+grid[4]+grid[5]).includes("-")) {
+                return [3,4,5];
+            }    
+            if (grid[6] === grid[7] && grid[6] === grid[8] && !(grid[6]+grid[7]+grid[8]).includes("-")) {
+                return [6,7,8];
+            }  
+    
+            // check columns
+            if (grid[0] === grid[3] && grid[0] === grid[6] && !(grid[0]+grid[3]+grid[6]).includes("-")) {
+                return [0,3,6];
+            } 
+            if (grid[1] === grid[4] && grid[1] === grid[7] && !(grid[1]+grid[4]+grid[7]).includes("-")) {
+                return [1,4,7];
+            } 
+            if (grid[2] === grid[5] && grid[2] === grid[8] && !(grid[2]+grid[5]+grid[8]).includes("-")) {
+                return [2,5,8];
+            } 
+            
+            // check diagonals
+            if (grid[0] === grid[4] && grid[0] === grid[8] && !(grid[0]+grid[4]+grid[8]).includes("-")) {
+                return [0,4,8];
+            } 
+            if (grid[2] === grid[4] && grid[2] === grid[6] && !(grid[2]+grid[4]+grid[6]).includes("-")) {
+                return [2,4,6];
+            } 
+    
+            return false;
+        };
+    
+        const eraseGrid = () => {
+            // reset grid array and remove html class for the cross/circle images
+            for (let i = 0; i < 9; i++){
+                grid[i] = "-";
+                const cell = document.querySelector(`[id='${i}']`);
+                cell.classList.remove("cross", "circle", "win");
+            } 
+            console.log("Grid erased!");
+            display();
+        };
+    
+        return {display, play, checkGameWin, eraseGrid}
+    
+    }) (); 
+    
+    
+    // add event listener for triggering game restart
+    restart.addEventListener("click", (e) => {
+        // erase the board and restart game
+        gameBoard.eraseGrid();
+        startGame(gameBoard, name1, name2);
+        console.log("Game restarted!");
+    });
+    
+    
+    console.log("Begin game.")
+    startGame(gameBoard, name1, name2);
+
+}

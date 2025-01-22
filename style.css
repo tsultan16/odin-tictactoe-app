@@ -7,6 +7,7 @@
 body {
     width: 100vw;
     height: 100vh;
+    background-color: rgba(61, 174, 197, 0.219);
 
     display: flex;
     flex-direction: column;
@@ -30,7 +31,8 @@ body {
 }
 
 .grid-cell:hover {
-    box-shadow: 0 0 1em 0.5em rgba(0, 244, 69, 0.756);  
+    box-shadow: 0 0 1em 0.5em rgba(0, 244, 69, 0.756);
+    background-color: rgba(0, 244, 69, 0.391);  
     cursor: pointer;
 }
 
@@ -40,7 +42,8 @@ body {
 }
 
 .grid-cell.cross:hover {
-    box-shadow: 0 0 1em 0.5em rgba(255, 2, 2, 0.756);  
+    box-shadow: 0 0 1em 0.5em rgba(255, 2, 2, 0.756); 
+    background-color: rgba(255, 2, 2, 0.5); 
 }
 
 .grid-cell.circle {
@@ -49,7 +52,8 @@ body {
 }
 
 .grid-cell.circle:hover {
-    box-shadow: 0 0 1em 0.5em rgba(255, 2, 2, 0.756);  
+    box-shadow: 0 0 1em 0.5em rgba(255, 2, 2, 0.756); 
+    background-color: rgba(255, 2, 2, 0.5);  
 }
 
 .grid-cell.circle.win, .grid-cell.cross.win {
@@ -58,7 +62,20 @@ body {
     background-color: rgba(0, 255, 255, 0.361); 
 }
 
+.restart-btn {
+    border: 0;
+    background-color: rgba(154, 2, 2, 0.8);
+    color: white;
+    font-weight: bold;
+    padding: 0.5em 2em;
+    border-radius: 0.3em;
+}
 
+.restart-btn:hover {
+    cursor: pointer;
+    background-color: rgba(154, 2, 2, 1.0);
+    box-shadow: 0 0 0.6em 0.2em rgba(154, 2, 2, 0.641);
+}
 
 
 

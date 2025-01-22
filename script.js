@@ -45,35 +45,34 @@ function startGame() {
             // check for win pattern (same symbol along any column/row/diagonal)
 
             // check rows
-            let foundPattern = false;
 
             if (grid[0] === grid[1] && grid[0] === grid[2] && !(grid[0]+grid[1]+grid[2]).includes("-")) {
-                return true;
+                return [0,1,2];
             }    
             if (grid[3] === grid[4] && grid[3] === grid[5] && !(grid[3]+grid[4]+grid[5]).includes("-")) {
-                return true;
+                return [3,4,5];
             }    
             if (grid[6] === grid[7] && grid[6] === grid[8] && !(grid[6]+grid[7]+grid[8]).includes("-")) {
-                return true;
+                return [6,7,8];
             }  
 
             // check columns
             if (grid[0] === grid[3] && grid[0] === grid[6] && !(grid[0]+grid[3]+grid[6]).includes("-")) {
-                return true;
+                return [0,3,6];
             } 
             if (grid[1] === grid[4] && grid[1] === grid[7] && !(grid[1]+grid[4]+grid[7]).includes("-")) {
-                return true;
+                return [1,4,7];
             } 
             if (grid[2] === grid[5] && grid[2] === grid[8] && !(grid[2]+grid[5]+grid[8]).includes("-")) {
-                return true;
+                return [2,5,8];
             } 
          
             // check diagonals
             if (grid[0] === grid[4] && grid[0] === grid[8] && !(grid[0]+grid[4]+grid[8]).includes("-")) {
-                return true;
+                return [0,4,8];
             } 
             if (grid[2] === grid[4] && grid[2] === grid[6] && !(grid[2]+grid[4]+grid[6]).includes("-")) {
-                return true;
+                return [2,4,6];
             } 
 
             return false;
@@ -150,9 +149,9 @@ function startGame() {
 
             playRound(position);
             const won = gameBoard.checkGameWin();
-            if (won) {
+            if (won !== false) {
                 gameOver = true;
-                console.log(`${current_player.getName()} has won the game!`);
+                console.log(`${current_player.getName()} has won the game! Win pattern: ${won}`);
                 player_turn.textContent = `Game over. ${current_player.getName()} wins!`;
             };
     

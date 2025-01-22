@@ -153,6 +153,13 @@ function startGame() {
                 gameOver = true;
                 console.log(`${current_player.getName()} has won the game! Win pattern: ${won}`);
                 player_turn.textContent = `Game over. ${current_player.getName()} wins!`;
+                // highlight the win pattern cells
+                won.forEach( (position) => {
+                   const cell = document.querySelector(`[id='${position}']`); // query selector with number id requires some extra work..
+                   cell.classList.add("win"); 
+                });
+                
+
             };
     
             // check if all slots filled

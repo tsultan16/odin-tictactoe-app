@@ -52,6 +52,13 @@ body {
     box-shadow: 0 0 1em 0.5em rgba(255, 2, 2, 0.756);  
 }
 
+.grid-cell.circle.win, .grid-cell.cross.win {
+    /* box-shadow: 0 0 1em 0.5em rgba(2, 40, 255, 0.756);  */
+    border: 3px solid rgb(0, 60, 255);
+    background-color: rgba(0, 255, 255, 0.361); 
+}
+
+
 
 
 

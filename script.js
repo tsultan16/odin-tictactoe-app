@@ -7,96 +7,21 @@ function createPlayer(name, type) {
 }
 
 
-function startGame(gameBoard, name1, name2) {
+function startGame(gameBoard, player1, player2) {
 
-    // get player names (hard-coded for now)
-    // const name1 = "Alice"; 
-    // const name2 = "Bob"; 
-
-    // create two players
-    const player1 = createPlayer(name1, "O");
-    const player2 = createPlayer(name2, "X");
-    console.log(`Player 1 name: ${player1.getName()}, type: ${player1.getType()}`);    
-    console.log(`Player 2 name: ${player2.getName()}, type: ${player2.getType()}`); 
-
-
+    // reset game board state
+    gameBoard.resetGrid();
+    gameBoard.current_turn = 0;
+    gameBoard.gameOver = false;
+    gameBoard.current_player = (gameBoard.current_turn%2 == 0) ? player1 : player2;
     console.log("game board: ", gameBoard);
     gameBoard.display();
 
-    const playRound = (position) => {
-        gameBoard.play(current_player, position);
-        gameBoard.display();
-    };
+    // make sure game board is visible
+    container.style.visibility = 'visible';
 
-    const symbolConvert = (type) => {
-        switch (type) {
-            case 'O':
-                return "circle";
-            
-            case 'X':
-                return "cross";
-        }
-    };
+    player_turn.textContent = `${gameBoard.current_player.getName()} make your move`;
 
-    // initialize current turn number of current player
-    let current_turn = 0;
-    let current_player = (current_turn%2 == 0) ? player1 : player2;
-    player_turn.textContent = `${current_player.getName()} make your move`;
-    let gameOver = false;
-
-    // attach event listener to board grid to register clicks
-    container.addEventListener("click", (e) => {
-        const target = e.target;
-        const position = target.id;
-        const num_classes = target.classList.length;
-        console.log(`Clicked on cell# ${position}, class list: ${target.classList}`);
-
-        // Note: empty cell has class list length of 1
-        
-        // play a round if current player fills an empty cell
-        if (num_classes === 1) {
-            // update grid to display the filled cell
-            target.classList.add(symbolConvert(current_player.getType()));
-            console.log(`Updated class list: ${target.classList}`)
-
-            playRound(position);
-            const won = gameBoard.checkGameWin();
-            if (won !== false) {
-                gameOver = true;
-                console.log(`${current_player.getName()} has won the game! Win pattern: ${won}`);
-                player_turn.textContent = `Game over. ${current_player.getName()} wins!`;
-                // highlight the win pattern cells
-                won.forEach( (position) => {
-                   const cell = document.querySelector(`[id='${position}']`); // query selector with number id requires some extra work..
-                   cell.classList.add("win"); 
-                });
-                
-
-            };
-            current_turn++;
-            
-            // check if all slots filled
-            if (current_turn === 9 && won === false) {
-                gameOver = true;
-                console.log(`And it's a draw!`);
-                player_turn.textContent = `Game over. It's a draw!`;
-            }
-            
-            if(!gameOver) {
-                // pass the turn to other player
-                current_player = (current_turn%2 === 0) ? player1 : player2;
-                player_turn.textContent =  `${current_player.getName()} make your move`;
-            } else {
-                // give option to restart the game... maybe with modal dialog form
-            } 
-                    
-        } else {
-            console.log("Invalid move. Board position already filled!");
-        }
-        
-
-    });
-    
 
 }
 
@@ -143,6 +68,12 @@ form_confirm_btn.addEventListener("click", (event) => {
 
 
 function startMain(name1, name2) {
+    // create two players
+    const player1 = createPlayer(name1, "O");
+    const player2 = createPlayer(name2, "X");
+    console.log(`Player 1 name: ${player1.getName()}, type: ${player1.getType()}`);    
+    console.log(`Player 2 name: ${player2.getName()}, type: ${player2.getType()}`); 
+
     // create game-board
     const gameBoard = (function () {
         // create empty game grid, will make it private
@@ -150,19 +81,22 @@ function startMain(name1, name2) {
         for (let i = 0; i < 9; i++){
             grid.push("-");
         } 
-    
+        let current_turn = 0;
+        let gameOver = false;
+        // give first turn to player 1
+        let current_player = (current_turn%2 == 0) ? player1 : player2;
+
         const display = () => {
             console.log(`\n${grid[0]} | ${grid[1]} | ${grid[2]}\n${grid[3]} | ${grid[4]} | ${grid[5]}\n${grid[6]} | ${grid[7]} | ${grid[8]}\n`);
         };
     
-        const play = (player, position) => {
+        const play = (position, player) => {
             if (grid[position] === "-"){
                 grid[position] = player.getType();
                 return true;
             } else {
                 console.log("Invalid move. Board position already filled!");
-                return false;function eraseGrid() {
-                }
+                return false;
             }
         };
     
@@ -203,32 +137,101 @@ function startMain(name1, name2) {
             return false;
         };
     
-        const eraseGrid = () => {
+        const resetGrid = () => {
             // reset grid array and remove html class for the cross/circle images
             for (let i = 0; i < 9; i++){
                 grid[i] = "-";
                 const cell = document.querySelector(`[id='${i}']`);
                 cell.classList.remove("cross", "circle", "win");
             } 
-            console.log("Grid erased!");
+
+            console.log("Grid has been reset!");
             display();
         };
     
-        return {display, play, checkGameWin, eraseGrid}
+        return {current_turn, gameOver, current_player, display, play, checkGameWin, resetGrid}
     
-    }) (); 
+    }) ();
+
+    const symbolConvert = (type) => {
+        switch (type) {
+            case 'O':
+                return "circle";
+            
+            case 'X':
+                return "cross";
+        }
+    };
+
+
+    // attach event listener to board grid to register clicks
+    container.addEventListener("click", (e) => {
+        const target = e.target;
+        const position = target.id;
+        const num_classes = target.classList.length;
+        console.log(`Clicked on cell# ${position}, class list: ${target.classList}`);
+
+        // Note: empty cell has class list length of 1
+        
+        // play a round if current player fills an empty cell
+        if (num_classes === 1) {
+            // update grid to display the filled cell
+            target.classList.add(symbolConvert(gameBoard.current_player.getType()));
+            console.log(`Updated class list: ${target.classList}`)
+
+            console.log(`Playing a round, Current turn: ${gameBoard.current_turn}, Current player: ${gameBoard.current_player}`);
+            gameBoard.play(position, gameBoard.current_player);
+            gameBoard.display();
+            gameBoard.current_turn++;
+            const won = gameBoard.checkGameWin();
+            if (won !== false) {
+                gameBoard.gameOver = true;
+                console.log(`${gameBoard.current_player.getName()} has won the game! Win pattern: ${won}`);
+                player_turn.textContent = `${gameBoard.current_player.getName()} wins!`;
+                // highlight the win pattern cells
+                won.forEach( (position) => {
+                    const cell = document.querySelector(`[id='${position}']`); // query selector with number id requires some extra work..
+                    cell.classList.add("win"); 
+                });
+                
+            };
+            
+            // check if all slots filled
+            if (gameBoard.current_turn === 9 && won === false) {
+                gameBoard.gameOver = true;
+                console.log(`And it's a draw!`);
+                player_turn.textContent = `It's a draw!`;
+            }
+            
+            if(!gameBoard.gameOver) {
+                // pass the turn to other player
+                gameBoard.current_player = (gameBoard.current_turn%2 === 0) ? player1 : player2;
+                console.log(`Passed turn to ${gameBoard.current_player.getName()}`);
+                player_turn.textContent =  `${gameBoard.current_player.getName()} make your move`;
+            } else {
+                // hide board to prevent further inputs
+                container.style.visibility = 'hidden';
+                player_turn.textContent = player_turn.textContent + " Game Over. Click Restart to play again.";
+            } 
+                    
+        } else {
+            console.log("Invalid move. Board position already filled!");
+        }
     
+    });
     
     // add event listener for triggering game restart
     restart.addEventListener("click", (e) => {
-        // erase the board and restart game
-        gameBoard.eraseGrid();
-        startGame(gameBoard, name1, name2);
+
+        // display the game container, then start the game
+        game_container.style.visibility = 'visible';
+        
         console.log("Game restarted!");
+        startGame(gameBoard, player1, player2);
     });
     
     
     console.log("Begin game.")
-    startGame(gameBoard, name1, name2);
+    startGame(gameBoard, player1, player2);
 
 }

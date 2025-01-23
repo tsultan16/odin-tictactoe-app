@@ -34,6 +34,17 @@ h1 {
     visibility: hidden;
 }
 
+.player-turn {
+    width: 100%;
+
+    font-size: 2em;
+    font-weight: bold;
+    border: 1px solid black;
+    background-color: rgba(18, 238, 43, 0.76);
+    padding: 0.25em 1em;
+    margin-bottom: 0.5em;
+}
+
 .container {
     height: 25em;
     width: 25em; 
